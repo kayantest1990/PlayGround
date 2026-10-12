@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kickz — Shoes Store</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #f4f5f7; color: #1a1a1a; }
+  header { background: #111827; color: #fff; padding: 1.25rem 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
+  header h1 { margin: 0; font-size: 1.5rem; }
+  header h1 span { color: #f59e0b; }
+  header p { margin: 0.25rem 0 0; color: #9ca3af; font-size: 0.9rem; }
+  .toolbar { display: flex; gap: 0.5rem; padding: 1rem 2rem; flex-wrap: wrap; }
+  .toolbar input, .toolbar select { padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; }
+  main { padding: 0 2rem 2rem; }
+  #status { padding: 0 2rem; color: #6b7280; font-size: 0.9rem; min-height: 1.4em; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .card { background: #fff; border-radius: 12px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 0.4rem; }
+  .card h2 { margin: 0; font-size: 1.1rem; }
+  .brand { color: #6b7280; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .price { font-weight: 700; font-size: 1.2rem; color: #059669; }
+  .meta { font-size: 0.85rem; color: #4b5563; }
+  .card p.desc { font-size: 0.9rem; color: #374151; flex: 1; }
+  .card button { background: #ef4444; color: #fff; border: 0; border-radius: 8px; padding: 0.5rem; cursor: pointer; }
+  .card button:hover { background: #dc2626; }
+  section.add { background: #fff; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  section.add h2 { margin-top: 0; }
+  section.add form { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.5rem; }
+  section.add input { padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; }
+  section.add button { background: #111827; color: #fff; border: 0; border-radius: 8px; padding: 0.6rem; cursor: pointer; grid-column: 1 / -1; }
+  footer { text-align: center; color: #9ca3af; font-size: 0.85rem; padding: 1.5rem; }
+  footer a { color: #6b7280; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Kickz<span>.</span> Shoes Store</h1>
+    <p>Basic CRUD demo — browse, search, add and remove shoes.</p>
+  </div>
+  <div id="count" aria-live="polite"></div>
+</header>
+
+<div class="toolbar">
+  <input id="q" type="search" placeholder="Search shoes or brands…" aria-label="Search shoes" />
+  <select id="brand" aria-label="Filter by brand">
+    <option value="">All brands</option>
+  </select>
+  <select id="sort" aria-label="Sort shoes">
+    <option value="">Sort: featured</option>
+    <option value="price">Price: low to high</option>
+    <option value="-price">Price: high to low</option>
+    <option value="name">Name A–Z</option>
+  </select>
+</div>
+
+<p id="status" role="status">Loading shoes…</p>
+
+<main>
+  <div class="grid" id="grid">
+    <article class="card"><div class="brand">Nike</div><h2>Air Runner</h2><div class="price">$129.99</div><div class="meta">Sizes 40–44 · Black · running</div><p class="desc">Lightweight running shoes with breathable mesh.</p></article>
+    <article class="card"><div class="brand">Reebok</div><h2>Classic Leather</h2><div class="price">$89.99</div><div class="meta">Sizes 39–42 · White · casual</div><p class="desc">Timeless casual sneakers in full-grain leather.</p></article>
+    <article class="card"><div class="brand">Adidas</div><h2>Ultra Boost Trail</h2><div class="price">$159.99</div><div class="meta">Sizes 42–45 · Grey · trail</div><p class="desc">Grippy trail shoes for all-terrain runs.</p></article>
+  </div>
+</main>
+
+<section class="add">
+  <h2>Add a shoe</h2>
+  <form id="addForm">
+    <input name="name" placeholder="Name (e.g. Court Vision)" required />
+    <input name="brand" placeholder="Brand (e.g. Nike)" required />
+    <input name="price" type="number" step="0.01" min="0" placeholder="Price" required />
+    <input name="sizes" placeholder="Sizes comma-separated (e.g. 40,41,42)" required />
+    <input name="color" placeholder="Color" />
+    <input name="stock" type="number" min="0" step="1" placeholder="Stock" />
+    <input name="category" placeholder="Category (running, casual…)" />
+    <button type="submit">Add shoe</button>
+  </form>
+</section>
+
+<footer>API: <a href="/api/shoes">/api/shoes</a> · <a href="/health">/health</a> · full CRUD (GET/POST/PUT/PATCH/DELETE)</footer>
+
+<script>
+const grid = document.getElementById('grid');
+const statusEl = document.getElementById('status');
+const countEl = document.getElementById('count');
+const qEl = document.getElementById('q');
+const brandEl = document.getElementById('brand');
+const sortEl = document.getElementById('sort');
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function card(s) {
+  const sizes = Array.isArray(s.sizes) ? s.sizes.join(', ') : '';
+  return `<article class="card" data-id="${esc(s.id)}">
+    <div class="brand">${esc(s.brand)}</div><h2>${esc(s.name)}</h2>
+    <div class="price">$${Number(s.price).toFixed(2)}</div>
+    <div class="meta">Sizes ${esc(sizes)} · ${esc(s.color)} · ${esc(s.category)} · stock ${esc(s.stock)}</div>
+    <p class="desc">${esc(s.description)}</p>
+    <button data-del="${esc(s.id)}" type="button">Delete</button>
+  </article>`;
+}
+
+async function load() {
+  statusEl.textContent = 'Loading shoes…';
+  const params = new URLSearchParams({ limit: '50' });
+  if (qEl.value.trim()) params.set('q', qEl.value.trim());
+  if (brandEl.value) params.set('brand', brandEl.value);
+  if (sortEl.value) params.set('sort', sortEl.value);
+  try {
+    const res = await fetch('/api/shoes?' + params.toString());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const { data, total } = await res.json();
+    const brands = [...new Set(data.map((s) => s.brand))];
+    const cur = brandEl.value;
+    brandEl.innerHTML = '<option value="">All brands</option>' + brands.map((b) => `<option ${b === cur ? 'selected' : ''}>${esc(b)}</option>`).join('');
+    grid.innerHTML = data.length ? data.map(card).join('') : '<p>No shoes match your search.</p>';
+    countEl.textContent = total + (total === 1 ? ' shoe' : ' shoes') + ' in store';
+    statusEl.textContent = '';
+  } catch (err) {
+    statusEl.textContent = 'API unavailable — showing sample data. (' + esc(err.message) + ')';
+  }
+}
+
+grid.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-del]');
+  if (!btn) return;
+  await fetch('/api/shoes/' + encodeURIComponent(btn.dataset.del), { method: 'DELETE' });
+  load();
+});
+
+document.getElementById('addForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const body = {
+    name: fd.get('name'), brand: fd.get('brand'), price: Number(fd.get('price')),
+    sizes: String(fd.get('sizes')).split(',').map((x) => Number(x.trim())).filter((n) => !Number.isNaN(n)),
+    color: fd.get('color') || '', stock: Number(fd.get('stock')) || 0, category: fd.get('category') || 'casual',
+  };
+  const res = await fetch('/api/shoes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (res.ok) { e.target.reset(); load(); }
+  else { const err = await res.json().catch(() => ({})); statusEl.textContent = 'Could not add shoe: ' + esc((err.errors || [err.error]).join(', ')); }
+});
+
+let t; for (const el of [qEl, brandEl, sortEl]) el.addEventListener('input', () => { clearTimeout(t); t = setTimeout(load, 250); });
+load();
+</script>
+</body>
+</html>
