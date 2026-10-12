@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relay — Chat Server App</title>
+  <meta name="description" content="Relay is a zero-dependency realtime chat server + client. Rooms, nicknames, typing indicators, SSE live updates." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">◈</div>
+        <div>
+          <div class="brand-name">Relay</div>
+          <div class="brand-sub">chat server</div>
+        </div>
+        <span class="conn" id="connBadge" title="Connection status">
+          <span class="dot" id="connDot"></span>
+          <span id="connText">local</span>
+        </span>
+      </div>
+
+      <div class="me">
+        <div class="avatar" id="meAvatar">?</div>
+        <div class="me-fields">
+          <label class="field-label" for="nickInput">Display name</label>
+          <div class="nick-row">
+            <input id="nickInput" maxlength="24" autocomplete="nickname" placeholder="e.g. ada" />
+            <button id="shuffleNick" class="icon-btn" title="Random name">🎲</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="rooms-head">
+        <span>Rooms</span>
+        <button id="addRoom" class="icon-btn" title="Create room">＋</button>
+      </div>
+      <ul class="rooms" id="roomList"></ul>
+
+      <div class="users-head"><span>Online</span><span class="count" id="onlineCount">1</span></div>
+      <ul class="users" id="userList"></ul>
+
+      <div class="side-foot">
+        <button id="clearBtn" class="ghost-btn">Clear room</button>
+        <button id="aboutBtn" class="ghost-btn">About</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="chat-head">
+        <button id="menuBtn" class="icon-btn only-mobile" aria-label="Rooms">☰</button>
+        <div>
+          <h1 id="roomTitle"># general</h1>
+          <p id="roomTopic">Welcome to Relay — say hello.</p>
+        </div>
+        <div class="head-actions">
+          <span id="typing" class="typing" aria-live="polite"></span>
+        </div>
+      </header>
+
+      <section class="messages" id="messages" aria-live="polite"></section>
+
+      <footer class="composer">
+        <button id="emojiBtn" class="icon-btn" title="Emoji">😊</button>
+        <input id="msgInput" maxlength="1000" autocomplete="off" placeholder="Message # general…" />
+        <button id="sendBtn" class="send-btn">Send ⏎</button>
+        <div class="emoji-pop" id="emojiPop" hidden></div>
+      </footer>
+    </main>
+  </div>
+
+  <dialog id="aboutDialog">
+    <h2>Relay — Chat Server App</h2>
+    <p>Zero-dependency realtime chat. One <code>server.js</code> (Node built-ins only) serves this UI and provides a JSON + SSE chat API.</p>
+    <ul>
+      <li><code>GET /api/health</code> — server status</li>
+      <li><code>GET /api/rooms</code> — list rooms</li>
+      <li><code>GET /api/messages?room=name&amp;since=id</code></li>
+      <li><code>POST /api/messages</code> <code>{room, user, text}</code></li>
+      <li><code>GET /api/events?room=name</code> — SSE live stream</li>
+      <li><code>POST /api/typing</code> <code>{room, user}</code></li>
+    </ul>
+    <p>Run locally: <code>node server.js</code> then open <code>http://localhost:3000</code>. Without a server, the app runs in local mode (multi-tab sync via BroadcastChannel + localStorage).</p>
+    <form method="dialog"><button class="send-btn">Close</button></form>
+  </dialog>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
