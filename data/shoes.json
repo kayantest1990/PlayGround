@@ -1,0 +1,40 @@
+[
+  {
+    "id": "2",
+    "name": "Classic Leather",
+    "brand": "Reebok",
+    "price": 89.99,
+    "sizes": [
+      39,
+      40,
+      41,
+      42
+    ],
+    "color": "White",
+    "stock": 40,
+    "category": "casual",
+    "description": "Timeless casual sneakers in full-grain leather.",
+    "imageUrl": "",
+    "createdAt": "2026-10-12T06:47:06.137Z",
+    "updatedAt": "2026-10-12T06:47:06.137Z"
+  },
+  {
+    "id": "3",
+    "name": "Ultra Boost Trail",
+    "brand": "Adidas",
+    "price": 159.99,
+    "sizes": [
+      42,
+      43,
+      44,
+      45
+    ],
+    "color": "Grey",
+    "stock": 15,
+    "category": "trail",
+    "description": "Grippy trail shoes for all-terrain runs.",
+    "imageUrl": "",
+    "createdAt": "2026-10-12T06:47:06.148Z",
+    "updatedAt": "2026-10-12T06:47:06.148Z"
+  }
+]

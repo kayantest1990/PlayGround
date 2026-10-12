@@ -1,0 +1,3 @@
+com.kickz.shoesstore:string/app_name = 0x7f030000
+com.kickz.shoesstore:layout/activity_main = 0x7f020000
+com.kickz.shoesstore:id/webview = 0x7f010000
